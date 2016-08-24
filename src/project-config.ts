@@ -14,12 +14,27 @@ import * as logging from 'plylog';
 
 const logger = logging.getLogger('cli.project-config');
 
+export const defaultSourceGlobs = [
+  'src/**/*',
+  // NOTE(fks) 06-29-2016: `polymer-cli serve` uses a bower.json file to display
+  // information about the project. The file is included here by default.
+  'bower.json',
+];
+
 export interface ProjectConfigOptions {
   root?: string;
   entrypoint?: string;
   shell?: string;
   fragment?: string[];
   fragments?: string[];
+
+  // @NOTE(fks) 08-23-2016: The options below were forked by polymer-build.
+  // We need to support all polymer-cli, polymer-build, and CLI flag
+  // formats until this is addressed.
+  sources?: string[];
+  sourceGlobs?: string[];
+  'include-dependencies'?: string[];
+  includeDependencies?: string[];
 }
 
 export class ProjectConfig {
@@ -28,6 +43,8 @@ export class ProjectConfig {
   shell: string;
   fragments: string[];
   inputs: string[];
+  sourceGlobs: string[];
+  includeDependencies: string[];
 
   static fromConfigFile(filepath: string): ProjectConfigOptions {
     try {
@@ -54,6 +71,9 @@ export class ProjectConfig {
     let options: ProjectConfigOptions = Object.assign({}, defaultOptions, overrideOptions);
 
     this.root = options.root || process.cwd();
+    this.sourceGlobs = options.sources || options.sourceGlobs || defaultSourceGlobs;
+    this.includeDependencies = options['include-dependencies'] || options.includeDependencies;
+
     if (options.entrypoint) {
       this.entrypoint = path.resolve(this.root, options.entrypoint);
     } else {
@@ -84,5 +104,6 @@ export class ProjectConfig {
     if (this.entrypoint) this.inputs.push(this.entrypoint);
     if (this.shell) this.inputs.push(this.shell);
     this.inputs = this.inputs.concat(this.fragments);
+    this.sourceGlobs = this.sourceGlobs.concat(this.inputs);
   }
 }
