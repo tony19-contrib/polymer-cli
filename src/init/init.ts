@@ -40,6 +40,36 @@ interface GeneratorInfo {
 }
 
 const localGenerators: {[name: string]: GeneratorInfo} = {
+  'polymer-1-element': {
+    id: 'polymer-init-polymer-1-element:app',
+    description: 'A simple Polymer 1.0 element template',
+    generator: createElementGenerator('polymer-1.x'),
+  },
+  'polymer-1-application': {
+    id: 'polymer-init-polymer-1-application:app',
+    description: 'A simple Polymer 1.0 application template',
+    generator: createApplicationGenerator('polymer-1.x'),
+  },
+  'polymer-1-starter-kit': {
+    id: 'polymer-init-polymer-1-starter-kit:app',
+    description:
+        'A Polymer 1.x starter application template, with navigation and "PRPL pattern" loading',
+    generator: createGithubGenerator({
+      owner: 'PolymerElements',
+      repo: 'polymer-starter-kit',
+      semverRange: '^2.0.0',
+    }),
+  },
+  'shop-1': {
+    id: 'polymer-init-shop-1:app',
+    description: 'The "Shop" Progressive Web App demo (Polymer 1.x)',
+    generator: createGithubGenerator({
+      owner: 'Polymer',
+      repo: 'shop',
+      semverRange: '^1.0.0',
+    }),
+  },
+
   'polymer-2-element': {
     id: 'polymer-init-polymer-2-element:app',
     description: 'A simple Polymer 2.0 element template',
